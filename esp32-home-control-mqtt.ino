@@ -4,7 +4,6 @@
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
 
-#include <RCSwitch.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Arduino.h>
@@ -55,8 +54,6 @@
 /* create an instance of WiFiClientSecure */
 WiFiClient espClient;
 PubSubClient client(espClient);
-
-RCSwitch mySwitch = RCSwitch();
 
 int mqttRetryAttempt = 0;
 int wifiRetryAttempt = 0;
@@ -149,8 +146,6 @@ void setup()
   Serial.println(" ");
   Serial.println("Starting ...");
   Serial.println(" ");
-
-  mySwitch.enableTransmit(26); 
 
   // We start by connecting to a WiFi network
   Serial.println();
