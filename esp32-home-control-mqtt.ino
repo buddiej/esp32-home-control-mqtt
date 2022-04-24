@@ -229,8 +229,7 @@ void loop()
     /* After we got the temperatures, we can print them here. */
     /* We use the function ByIndex, and as an example get the temperature from the first sensor only. */
     Serial.print("Temperature DS18B20: ");
-    Serial.println(sensors.getTempCByIndex(0));  
-    Serial.println("Test...");
+    Serial.println(sensors.getTempCByIndex(0));
 
     if((loop_5sec_counter % 2) == 0)
     {
@@ -252,6 +251,8 @@ void loop()
     client.publish(TOPIC_SOCKET_1_CHANNEL_1_GET_ON, data, false);
 
   }
+
+  IrReceiveAndDecode();
 
 }
 
@@ -354,4 +355,14 @@ void mqttconnect(void)
       }
     }
   }
+}
+
+/**************************************************************************************************
+Function: IrReceiveAndDecode()
+Argument: void
+return: void
+**************************************************************************************************/
+void IrReceiveAndDecode(void)
+{
+  
 }
