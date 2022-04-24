@@ -30,30 +30,14 @@
 #define MQTT_PAYLOAD_MAX 120
 
 /* Receive topics */
-#define TOPIC_SOCKET_1_CHANNEL_1_SET_ON      "wz/socket_1/channel_1/set/on"
-#define TOPIC_SOCKET_1_CHANNEL_2_SET_ON      "wz/socket_1/channel_2/set/on"
-#define TOPIC_SOCKET_1_CHANNEL_3_SET_ON      "wz/socket_1/channel_3/set/on"
-#define TOPIC_SOCKET_1_CHANNEL_4_SET_ON      "wz/socket_1/channel_4/set/on"
-
-#define TOPIC_SOCKET_2_CHANNEL_1_SET_ON      "wz/socket_2/channel_1/set/on"
-#define TOPIC_SOCKET_2_CHANNEL_2_SET_ON      "wz/socket_2/channel_2/set/on"
-#define TOPIC_SOCKET_2_CHANNEL_3_SET_ON      "wz/socket_2/channel_3/set/on"
-#define TOPIC_SOCKET_2_CHANNEL_4_SET_ON      "wz/socket_2/channel_4/set/on"
-
 #define TOPIC_IR_SEND_MESSAGE_RECEIVED_SET   "wz/irsend/received/set"
 
 /* Send topics */
-#define TOPIC_SOCKET_1_CHANNEL_1_GET_ON      "wz/socket_1/temperature/get/on"
+#define TOPIC_SOCKET_1_CHANNEL_1_GET_ON      "wz/irsend/temperature/get/on"
 
-
-#define ONE_WIRE_BUS_PIN 14   /* DS18B20 Temperature Sensor */
-
-#define PWM_LED_ALLIVE_PIN        15
-#define PWM_LED_ALLIVE_FREQ       4000
-#define PWM_LED_ALLIVE_CHANNEL    0
-#define PWM_LED_ALLIVE_RESOLUTION 8
-
-#define IR_SEND_PIN               4
+/* Pin definition */
+#define ONE_WIRE_BUS_PIN    14   /* DS18B20 Temperature Sensor */
+#define IR_SEND_PIN         4
 
 /*****************************************************************************************/
 /*                                     TYPEDEF ENUM                                      */
@@ -159,7 +143,7 @@ void setup()
 
   Serial.println(" ");
   Serial.println("################################");
-  Serial.println("# Program Home-Control v0.3    #");
+  Serial.println("# Program Home-Control v0.4    #");
   Serial.println("################################");
   Serial.println(__FILE__);
   Serial.println(" ");
@@ -204,12 +188,6 @@ void setup()
 
   /* Start up the library for temperature aqusition */
   sensors.begin();
-
-  ledcAttachPin(PWM_LED_ALLIVE_PIN, PWM_LED_ALLIVE_CHANNEL); // assign a led pins to a channel
-  // Initialize channels
-  // channels 0-15, resolution 1-16 bits, freq limits depend on resolution
-  // ledcSetup(uint8_t channel, uint32_t freq, uint8_t resolution_bits);
-  ledcSetup(PWM_LED_ALLIVE_CHANNEL, PWM_LED_ALLIVE_FREQ, PWM_LED_ALLIVE_RESOLUTION); // 12 kHz PWM, 8-bit resolution
 
   irsend.begin();
  
@@ -256,11 +234,7 @@ void loop()
 
     if((loop_5sec_counter % 2) == 0)
     {
-      ledcWrite(PWM_LED_ALLIVE_CHANNEL, 0); // set the brightness of the LED
-    }
-    else
-    {
-      ledcWrite(PWM_LED_ALLIVE_CHANNEL, 255); // set the brightness of the LED
+  
     }
     
     /********************************************************************************************/
@@ -326,150 +300,7 @@ void receivedCallback(char* topic, byte* payload, unsigned int length)
   /********************************************************************************************/
   
   /*+++++++++++++++++++++++++++++ Set control +++++++++++++++++++++++++++++++++++++++*/ 
-  if(strcmp(topic, TOPIC_SOCKET_1_CHANNEL_1_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 1 channel 1 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      mySwitch.setPulseLength(200);
-      delay(10);
-      if(Loc_Status == 1)
-      {
-          mySwitch.send("000000000000000000001111");
-      }
-      else
-      {
-         mySwitch.send("000000000000000000001110");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_1_CHANNEL_2_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 1 channel 2 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      mySwitch.setPulseLength(200);
-      delay(10);
-      if(Loc_Status == 1)
-      {
-          mySwitch.send("000000000000000000000111");
-      }
-      else
-      {
-         mySwitch.send("000000000000000000000110");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_1_CHANNEL_3_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 1 channel 3 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      mySwitch.setPulseLength(200);
-      delay(10);
-      if(Loc_Status == 1)
-      {
-          mySwitch.send("000000000000000000001011");
-      }
-      else
-      {
-         mySwitch.send("000000000000000000001010");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_1_CHANNEL_4_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 1 channel 4 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      mySwitch.setPulseLength(200);
-      delay(10);
-      if(Loc_Status == 1)
-      {
-          mySwitch.send("000000000000000000000011");
-      }
-      else
-      {
-         mySwitch.send("000000000000000000000010");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_2_CHANNEL_1_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 2 channel 1 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      if(Loc_Status == 1 || Loc_Status == 0)
-      {
-          mySwitch.setPulseLength(294);
-          delay(10);
-          mySwitch.send("000000000000000000001000");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_2_CHANNEL_2_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 2 channel 2 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      if(Loc_Status == 1 || Loc_Status == 0)
-      {
-          mySwitch.setPulseLength(294);
-          delay(10);
-          mySwitch.send("000000000000000000000100");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_2_CHANNEL_3_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 2 channel 3 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      if(Loc_Status == 1 || Loc_Status == 0)
-      {
-          mySwitch.setPulseLength(294);
-          delay(10);
-          mySwitch.send("000000000000000000000010");
-      }
-    }
-  }
-  if(strcmp(topic, TOPIC_SOCKET_2_CHANNEL_4_SET_ON)==0)
-  {
-    if(root.containsKey("status")) 
-    {
-      Loc_Status = root["status"];
-      Serial.print("status socket 2 channel 4 set: ");
-     
-      Serial.println(Loc_Status, DEC);
-      if(Loc_Status == 1 || Loc_Status == 0)
-      {
-          mySwitch.setPulseLength(294);
-          delay(10);
-          mySwitch.send("000000000000000000000001");
-      }
-    }
-  }
+ 
   if(strcmp(topic, TOPIC_IR_SEND_MESSAGE_RECEIVED_SET)==0)
   {
     if(root.containsKey("nec_code")) 
@@ -505,18 +336,8 @@ void mqttconnect(void)
     {
       Serial.println("connected");
       /* subscribe topic's */
-      client.subscribe(TOPIC_SOCKET_1_CHANNEL_1_SET_ON);
-      client.subscribe(TOPIC_SOCKET_1_CHANNEL_2_SET_ON);
-      client.subscribe(TOPIC_SOCKET_1_CHANNEL_3_SET_ON);
-      client.subscribe(TOPIC_SOCKET_1_CHANNEL_4_SET_ON);
-      client.subscribe(TOPIC_SOCKET_2_CHANNEL_1_SET_ON);
-      client.subscribe(TOPIC_SOCKET_2_CHANNEL_2_SET_ON);
-      client.subscribe(TOPIC_SOCKET_2_CHANNEL_3_SET_ON);
-      client.subscribe(TOPIC_SOCKET_2_CHANNEL_4_SET_ON);
       client.subscribe(TOPIC_IR_SEND_MESSAGE_RECEIVED_SET);
-
-
-      
+    
     } 
     else 
     {

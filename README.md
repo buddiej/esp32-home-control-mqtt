@@ -390,8 +390,8 @@ esp32cam.upload.maximum_size=1966080
 esp32cam.build.partitions=min_spiffs
 The various options are detailed in the same file with keys named esp32.menu.PartitionScheme., and for some boards these options are configurable be the user. To add this, remove (or comment out with a # character) the two lines found above so they look like:
 
-esp32cam.upload.maximum_size=3145728
-esp32cam.build.partitions=huge_app
+comment!!! esp32cam.upload.maximum_size=3145728
+comment!!! esp32cam.build.partitions=huge_app
 and add the required menu selections for your application- e.g.
 
 esp32cam.menu.PartitionScheme.huge_app=Huge APP (3MB No OTA/1MB SPIFFS)
